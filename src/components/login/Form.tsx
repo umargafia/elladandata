@@ -15,10 +15,13 @@ import MyInput from '../global/MyInput';
 import { ColorConstant, WindowConstant } from '../../utilities/Theme';
 import { RootStackParamList } from '../../base/NativeStack';
 import MyIcon from '../global/MyIcon';
+import useCheckFingerPrint from '../../hooks/CheckFingerPrint';
 
 type navProps = NativeStackNavigationProp<RootStackParamList, 'login'>;
 const Form = () => {
   const navigation = useNavigation<navProps>();
+  const { loginDetails, useFinger } = useCheckFingerPrint();
+
   return (
     <MyContainer
       style={{
@@ -41,16 +44,22 @@ const Form = () => {
           borderRadius={'$md'}
           size="xl"
           mb="$2"
-          mr={'$3'}
           flex={1}
           bgColor={ColorConstant.primary}
         >
           <ButtonText>Login</ButtonText>
         </Button>
 
-        <Button size="xl" borderRadius={'$md'} bgColor={ColorConstant.primary}>
-          <MyIcon name="finger-print" color="white" />
-        </Button>
+        {useFinger && (
+          <Button
+            size="xl"
+            borderRadius={'$md'}
+            bgColor={ColorConstant.primary}
+            ml={'$3'}
+          >
+            <MyIcon name="finger-print" color="white" />
+          </Button>
+        )}
       </HStack>
       <TouchableOpacity onPress={() => navigation.navigate('forgetPassword')}>
         <HStack>
