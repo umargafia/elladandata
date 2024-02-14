@@ -14,6 +14,9 @@ export const saveEncryptedData = async (response: {}, password: string) => {
 
 // Function to retrieve and decrypt data from device storage
 export const getEncryptedData = async () => {
+  // SecureStore.deleteItemAsync('user');
+  // SecureStore.deleteItemAsync('password');
+
   try {
     const dataAsString = await SecureStore.getItemAsync('user');
     const password = await SecureStore.getItemAsync('password');
