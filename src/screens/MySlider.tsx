@@ -6,6 +6,7 @@ import { StatusBar } from 'expo-status-bar';
 import SlideList from '../utilities/SliderList';
 import SlideItem from '../components/slide/SlideItem';
 import NextButton from '../components/slide/NextButton';
+import Paginator from '../components/slide/Paginator';
 
 const MySlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -49,6 +50,7 @@ const MySlider: React.FC = () => {
           viewabilityConfig={viewConfig}
         />
       </Box>
+      <Paginator data={SlideList} scrollX={scrollX} />
       <NextButton
         percentage={(currentIndex + 1) * (100 / SlideList.length)}
         scrollRef={slideRef}
