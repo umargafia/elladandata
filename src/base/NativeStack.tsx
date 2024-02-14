@@ -24,15 +24,19 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const NativeStack = () => {
   const { usePassword } = useCheckFingerPrint();
+
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
       }}
-      initialRouteName={!usePassword ? 'welcome' : 'slider'}
+      initialRouteName={'slider'}
     >
-      <Stack.Screen name="slider" component={MySlider} />
+      <Stack.Screen
+        name="slider"
+        component={usePassword ? WelcomeScreen : MySlider}
+      />
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="login" component={Login} />
       <Stack.Screen name="signup" component={Signup} />
