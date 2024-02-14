@@ -1,4 +1,4 @@
-import { Dimensions } from 'react-native';
+import { Dimensions, Platform } from 'react-native';
 
 export const ColorConstant = {
   primary: 'blue',
@@ -10,4 +10,9 @@ export const ColorConstant = {
 export const WindowConstant: { width: number; height: number } = {
   width: Dimensions.get('window').width,
   height: Dimensions.get('window').height,
+};
+
+export const DeviceConstant: { isAndroid: boolean; IsIos: boolean } = {
+  isAndroid: Platform.OS === 'android',
+  IsIos: Platform.OS === 'ios',
 };

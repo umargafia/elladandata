@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import SlideList from '../utilities/SliderList';
 import SlideItem from '../components/slide/SlideItem';
+import NextButton from '../components/slide/NextButton';
 
 const MySlider: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
@@ -20,7 +21,12 @@ const MySlider: React.FC = () => {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
   return (
-    <Box flex={1} justifyContent="space-around" alignItems="center">
+    <Box
+      flex={1}
+      justifyContent="space-around"
+      alignItems="center"
+      backgroundColor="#fff"
+    >
       <StatusBar style="dark" />
       <Box flex={3}>
         <FlatList
@@ -43,6 +49,10 @@ const MySlider: React.FC = () => {
           viewabilityConfig={viewConfig}
         />
       </Box>
+      <NextButton
+        percentage={(currentIndex + 1) * (100 / SlideList.length)}
+        scrollRef={slideRef}
+      />
     </Box>
   );
 };
