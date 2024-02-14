@@ -1,10 +1,7 @@
 import * as SecureStore from 'expo-secure-store';
 
 // Function to encrypt and save data to device storage
-export const saveEncryptedData = async (
-  response: { phone: string; name: string },
-  password: string
-) => {
+export const saveEncryptedData = async (response: {}, password: string) => {
   try {
     const dataAsString = JSON.stringify(response);
     await SecureStore.setItemAsync('password', password);

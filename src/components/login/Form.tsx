@@ -13,6 +13,7 @@ import {
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { useToast } from '@gluestack-ui/themed';
 
 import MyContainer from '../global/MyContainer';
 import MyInput from '../global/MyInput';
@@ -21,7 +22,7 @@ import { RootStackParamList } from '../../base/NativeStack';
 import MyIcon from '../global/MyIcon';
 import useCheckFingerPrint from '../../hooks/CheckFingerPrint';
 import { sendPostRequest } from '../../utilities/Api';
-import { useToast } from '@gluestack-ui/themed';
+import { saveEncryptedData } from '../../utilities/SaveData';
 
 type navProps = NativeStackNavigationProp<RootStackParamList, 'login'>;
 
@@ -71,11 +72,34 @@ const Form = () => {
     }
   };
 
+  const showError = (response: responseProp) => {
+    toast.show({
+      placement: 'top',
+      render: ({ id }) => {
+        const toastId = 'toast-' + id;
+        return (
+          <Toast
+            nativeID={toastId}
+            width={WindowConstant.width - 20}
+            mt={40}
+            action="error"
+            variant="accent"
+          >
+            <VStack space="xs">
+              <ToastTitle>Login Fail</ToastTitle>
+              <ToastDescription>{response?.msg}</ToastDescription>
+            </VStack>
+          </Toast>
+        );
+      },
+    });
+  };
+
   useEffect(() => {
     if (useFinger) {
       setNumber(loginDetails.number);
     }
-  }, []);
+  }, [useFinger, loginDetails]);
   const handleLogin = async () => {
     validatesInput();
 
@@ -92,27 +116,11 @@ const Form = () => {
       const response: responseProp = await sendPostRequest(number, password);
       setLoading(false);
       if (response?.status !== 'success') {
-        toast.show({
-          placement: 'top',
-          render: ({ id }) => {
-            const toastId = 'toast-' + id;
-            return (
-              <Toast
-                nativeID={toastId}
-                width={WindowConstant.width - 20}
-                mt={40}
-                action="error"
-                variant="accent"
-              >
-                <VStack space="xs">
-                  <ToastTitle>Login Fail</ToastTitle>
-                  <ToastDescription>{response?.msg}</ToastDescription>
-                </VStack>
-              </Toast>
-            );
-          },
-        });
+        return showError(response);
       }
+
+      await saveEncryptedData(response, password);
+      navigation.replace('home', { phone: number, password });
     } catch (error) {}
   };
 
@@ -160,6 +168,7 @@ const Form = () => {
           bgColor={ColorConstant.primary}
           onPress={handleLogin}
           isDisabled={isLoading}
+          elevation="$1"
         >
           <ButtonText>{isLoading ? 'Loading...' : 'Login'}</ButtonText>
         </Button>
@@ -167,6 +176,7 @@ const Form = () => {
         {useFinger && (
           <Button
             size="xl"
+            elevation="$1"
             borderRadius={'$md'}
             bgColor={ColorConstant.primary}
             ml={'$3'}
