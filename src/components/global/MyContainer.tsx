@@ -3,14 +3,16 @@ import {
   KeyboardAvoidingView,
   Platform,
   StatusBar,
+  StyleProp,
   StyleSheet,
   View,
   ViewProps,
+  ViewStyle,
 } from 'react-native';
 import { WindowConstant } from '../../utilities/Theme';
 
 const MyContainer: React.FC<{
-  style?: ViewProps['style'];
+  style?: StyleProp<ViewStyle>;
   padding?: number | boolean;
   background?: string;
   children?: React.ReactNode;
