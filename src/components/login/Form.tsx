@@ -5,6 +5,8 @@ import {
   ButtonText,
   HStack,
   Heading,
+  Link,
+  LinkText,
   Text,
   Toast,
   ToastDescription,
@@ -14,6 +16,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { useToast } from '@gluestack-ui/themed';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 import MyContainer from '../global/MyContainer';
 import MyInput from '../global/MyInput';
@@ -34,7 +37,7 @@ type responseProp = {
 };
 const Form = () => {
   const navigation = useNavigation<navProps>();
-  const { loginDetails, useFinger } = useCheckFingerPrint();
+  const { loginDetails, useFinger, setFinger } = useCheckFingerPrint();
   const [number, setNumber] = useState<string | undefined>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<{ num: boolean; pass: boolean }>({
@@ -124,6 +127,30 @@ const Form = () => {
     } catch (error) {}
   };
 
+  const handleBioAuth = async () => {
+    try {
+      //  authenticate the user using the fingerprint sensor
+      const biometricAuth = await LocalAuthentication.authenticateAsync({
+        promptMessage: 'Login with Fingerprint',
+        disableDeviceFallback: true,
+        cancelLabel: 'Cancel',
+      });
+
+      if (biometricAuth.success) {
+        //if the device authentication is successful login the user automatic
+        navigation.replace('home', {
+          phone: loginDetails?.number,
+          password: loginDetails?.password,
+        });
+      }
+    } catch (error) {}
+  };
+
+  const handleChangeNumber = () => {
+    setNumber('');
+    setFinger(false);
+  };
+
   return (
     <MyContainer
       style={{
@@ -131,8 +158,17 @@ const Form = () => {
         paddingVertical: WindowConstant.width * 0.05,
       }}
     >
-      <Heading mb={!useFinger ? '$5' : 0}>Welcome back!</Heading>
-      {useFinger && <Heading mb="$3">{loginDetails.name}</Heading>}
+      <Heading mb={!useFinger ? '$5' : 0}>Welcome Back!</Heading>
+      {useFinger && (
+        <>
+          <Heading mb="$2" textTransform="capitalize">
+            {loginDetails.name}
+          </Heading>
+          <Link mb="$6" onPress={handleChangeNumber}>
+            <LinkText textDecorationLine="none">Change Phone Number</LinkText>
+          </Link>
+        </>
+      )}
       {!useFinger && (
         <MyInput
           text="Phone Number"
@@ -180,6 +216,7 @@ const Form = () => {
             borderRadius={'$md'}
             bgColor={ColorConstant.primary}
             ml={'$3'}
+            onPress={handleBioAuth}
           >
             <MyIcon name="finger-print" color="white" />
           </Button>
