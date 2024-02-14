@@ -1,16 +1,17 @@
+import React from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
   StatusBar,
   StyleSheet,
   View,
+  ViewProps,
 } from 'react-native';
-
-import { DeviceConstant, WindowConstant } from '../../utilities/Theme';
+import { WindowConstant } from '../../utilities/Theme';
 
 const MyContainer: React.FC<{
-  style?: {};
-  padding?: number;
+  style?: ViewProps['style'];
+  padding?: number | boolean;
   background?: string;
   children?: React.ReactNode;
 }> = ({ style, padding, background, children }) => {
@@ -21,10 +22,11 @@ const MyContainer: React.FC<{
     >
       <View
         style={[
-          styles.container,
-          padding && { paddingTop: WindowConstant.width * 0.05 },
           style,
-          background && { backgroundColor: background },
+          styles.container,
+          padding !== undefined && { paddingTop: WindowConstant.width * 0.05 },
+          style,
+          background !== undefined && { backgroundColor: background },
         ]}
       >
         {children}
@@ -33,13 +35,13 @@ const MyContainer: React.FC<{
   );
 };
 
-export default MyContainer;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: DeviceConstant.isAndroid ? StatusBar.currentHeight : 30,
+    paddingTop: Platform.OS === 'android' ? StatusBar.currentHeight : 30,
     paddingHorizontal: WindowConstant.width * 0.05,
     paddingBottom: WindowConstant.width * 0.05,
   },
 });
+
+export default MyContainer;

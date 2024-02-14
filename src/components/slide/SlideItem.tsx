@@ -16,7 +16,7 @@ const SlideItem: React.FC<SliderItemProps> = ({ item }) => {
   return (
     <View style={styles.container}>
       <View style={styles.imageContainer}>
-        <Image source={item.image} style={styles.image} />
+        <Image source={item.image} style={styles.image} contentFit="contain" />
       </View>
 
       <View style={styles.innerContainer}>
@@ -50,7 +50,6 @@ const styles = StyleSheet.create({
   },
   image: {
     width: '80%',
-    resizeMode: 'contain',
     flex: 0.7,
     justifyContent: 'center',
     borderRadius: 10,

@@ -18,7 +18,7 @@ const NativeStack = () => {
         headerShown: false,
         animation: 'slide_from_right',
       }}
-      initialRouteName="slider"
+      initialRouteName="welcome"
     >
       <Stack.Screen name="slider" component={MySlider} />
       <Stack.Screen name="welcome" component={WelcomeScreen} />
