@@ -11,7 +11,7 @@ import { ColorConstant, WindowConstant } from '../utilities/Theme';
 import { RootStackParamList } from '../base/NativeStack';
 import MyButton from '../components/global/MyButton';
 
-type navProps = NativeStackNavigationProp<RootStackParamList, 'slider'>;
+type navProps = NativeStackNavigationProp<RootStackParamList, 'welcome'>;
 export default function WelcomeScreen() {
   const navigation = useNavigation<navProps>();
 
@@ -46,6 +46,5 @@ const styles = StyleSheet.create({
   image: {
     width: '80%',
     height: WindowConstant.width > 400 ? 300 : 200,
-    resizeMode: 'cover',
   },
 });

@@ -49,7 +49,6 @@ const styles = StyleSheet.create({
   image: {
     height: WindowConstant.height / 3,
     width: 300,
-    resizeMode: 'contain',
   },
   text: {
     fontWeight: 'bold',

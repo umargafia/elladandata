@@ -1,11 +1,13 @@
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
+import { Spinner } from '@gluestack-ui/themed';
+
 import { ColorConstant } from '../../utilities/Theme';
 
 const Loader = () => {
   return (
     <View style={styles.loader}>
-      <ActivityIndicator size="large" color={ColorConstant.primary} />
+      <Spinner size="large" color={ColorConstant.primary} />
     </View>
   );
 };

@@ -7,6 +7,7 @@ import Login from '../screens/Login';
 import ErrorPage from '../screens/ErrorPage';
 import ForgetPassword from '../screens/ForgetPassword';
 import Home from '../screens/Home';
+import Signup from '../screens/Signup';
 
 export type RootStackParamList = {
   welcome: undefined;
@@ -32,6 +33,7 @@ const NativeStack = () => {
       <Stack.Screen name="slider" component={MySlider} />
       <Stack.Screen name="welcome" component={WelcomeScreen} />
       <Stack.Screen name="login" component={Login} />
+      <Stack.Screen name="signup" component={Signup} />
       <Stack.Screen name="error" component={ErrorPage} />
       <Stack.Screen name="forgetPassword" component={ForgetPassword} />
       <Stack.Screen name="home" component={Home} />
