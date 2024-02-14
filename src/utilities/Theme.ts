@@ -1,0 +1,13 @@
+import { Dimensions } from 'react-native';
+
+export const ColorConstant = {
+  primary: 'blue',
+  black: '#424242',
+  red: '#c5221f',
+  gray: '#62656b',
+};
+
+export const WindowConstant: { width: number; height: number } = {
+  width: Dimensions.get('window').width,
+  height: Dimensions.get('window').height,
+};
