@@ -42,7 +42,7 @@ const MyInput: React.FC<props> = ({
           {text}
         </FormControlLabelText>
       </FormControlLabel>
-      <Input rounded="$lg" alignItems="center" pl={3}>
+      <Input rounded="$lg" alignItems="center" pl={3} size="xl">
         <MyIcon name={icon} size={25} />
         <InputField
           type={password ? 'password' : 'text'}

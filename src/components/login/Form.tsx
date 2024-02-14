@@ -14,10 +14,11 @@ import MyContainer from '../global/MyContainer';
 import MyInput from '../global/MyInput';
 import { ColorConstant, WindowConstant } from '../../utilities/Theme';
 import { RootStackParamList } from '../../base/NativeStack';
+import MyIcon from '../global/MyIcon';
 
-type navprops = NativeStackNavigationProp<RootStackParamList, 'login'>;
+type navProps = NativeStackNavigationProp<RootStackParamList, 'login'>;
 const Form = () => {
-  const navigation = useNavigation<navprops>();
+  const navigation = useNavigation<navProps>();
   return (
     <MyContainer
       style={{
@@ -36,13 +37,19 @@ const Form = () => {
       />
       <HStack alignSelf="stretch" mt={'$4'}>
         <Button
-          width="100%"
           style={styles.button}
-          borderRadius={10}
+          borderRadius={'$md'}
+          size="xl"
           mb="$2"
+          mr={'$3'}
+          flex={1}
           bgColor={ColorConstant.primary}
         >
           <ButtonText>Login</ButtonText>
+        </Button>
+
+        <Button size="xl" borderRadius={'$md'} bgColor={ColorConstant.primary}>
+          <MyIcon name="finger-print" color="white" />
         </Button>
       </HStack>
       <TouchableOpacity onPress={() => navigation.navigate('forgetPassword')}>
