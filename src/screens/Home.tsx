@@ -7,6 +7,7 @@ import { RootStackParamList } from '../base/NativeStack';
 
 import Urls from '../utilities/Urls';
 import Loader from '../components/global/Loader';
+import { RouteProp } from '@react-navigation/native';
 
 const urls = Urls();
 
@@ -15,14 +16,15 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
   'home'
 >;
 
+type HomeScreenRouteProp = RouteProp<RootStackParamList, 'home'>;
 interface HomeProps {
-  route: { params: { phone: string; password: string } };
+  route: HomeScreenRouteProp;
   navigation: HomeScreenNavigationProp;
 }
 
 const Home: React.FC<HomeProps> = ({ route, navigation }) => {
   const [visited, setVisited] = useState(false);
-  const { phone, password } = route.params;
+  const { phone, password } = route?.params;
   const webViewRef = useRef<WebView>(null);
   const [isLoading, setLoading] = useState(true);
   const [canGoBack, setCanGoBack] = useState(false);
