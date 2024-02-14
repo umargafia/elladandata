@@ -1,4 +1,4 @@
-const baseUrl = 'https://www.momosub.com.ng/';
+const baseUrl = 'http://elladandata.com.ng/';
 
 type props = {
   home: string;

@@ -1,29 +1,31 @@
 import { Alert } from 'react-native';
 import Urls from './Urls';
+import axios from 'axios';
 
 const urls = Urls();
-export async function sendPostRequest(phoneNumber, password) {
-  const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-
-  const requestOptions = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Token ${currentDate}`,
-    },
-    body: JSON.stringify({
-      phone: phoneNumber,
-      accesspass: password,
-    }),
-  };
-
+export async function sendPostRequest(
+  phoneNumber: string | undefined,
+  password: string
+) {
   try {
-    const response = await fetch(urls.api, requestOptions);
-    const data = await response.json();
-    return data;
+    const currentDate = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const response = await axios.post(
+      urls.api,
+      {
+        phone: phoneNumber,
+        accesspass: password,
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Token ${currentDate}`,
+        },
+      }
+    );
+
+    return response.data;
   } catch (error) {
-    // Handle any error that occurred during the request
-    Alert.alert('Error', 'something went wrong ');
-    return;
+    Alert.alert('Error', `Error Login\n${error}`);
+    return null;
   }
 }

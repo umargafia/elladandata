@@ -12,6 +12,7 @@ type loginProps = {
 const useCheckFingerPrint = (): {
   useFinger: boolean;
   loginDetails: loginProps;
+  setFinger: React.Dispatch<React.SetStateAction<boolean>>;
 } => {
   const [useFinger, setFinger] = useState<boolean>(false);
   const [loginDetails, setLoginDetails] = useState<loginProps>({});
@@ -48,6 +49,7 @@ const useCheckFingerPrint = (): {
   return {
     useFinger,
     loginDetails,
+    setFinger,
   };
 };
 

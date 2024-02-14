@@ -1,11 +1,15 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Button,
   ButtonText,
   HStack,
   Heading,
   Text,
+  Toast,
+  ToastDescription,
+  ToastTitle,
+  VStack,
 } from '@gluestack-ui/themed';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
@@ -16,17 +20,28 @@ import { ColorConstant, WindowConstant } from '../../utilities/Theme';
 import { RootStackParamList } from '../../base/NativeStack';
 import MyIcon from '../global/MyIcon';
 import useCheckFingerPrint from '../../hooks/CheckFingerPrint';
+import { sendPostRequest } from '../../utilities/Api';
+import { useToast } from '@gluestack-ui/themed';
 
 type navProps = NativeStackNavigationProp<RootStackParamList, 'login'>;
+
+type responseProp = {
+  msg?: string;
+  status?: 'success' | 'invalid';
+  name?: string;
+  phone?: string;
+};
 const Form = () => {
   const navigation = useNavigation<navProps>();
   const { loginDetails, useFinger } = useCheckFingerPrint();
-  const [number, setNumber] = useState<string>('');
+  const [number, setNumber] = useState<string | undefined>('');
   const [password, setPassword] = useState<string>('');
   const [error, setError] = useState<{ num: boolean; pass: boolean }>({
     num: false,
     pass: false,
   });
+  const [isLoading, setLoading] = useState<boolean>(false);
+  const toast = useToast();
 
   const resetInput = (value: string) => {
     setError((prev) => {
@@ -38,7 +53,7 @@ const Form = () => {
   };
 
   const validatesInput = () => {
-    if (number.trim() === '') {
+    if (number?.trim().length !== 11) {
       setError((prev) => {
         return {
           ...prev,
@@ -46,7 +61,7 @@ const Form = () => {
         };
       });
     }
-    if (password.trim() === '') {
+    if (password.trim() === '' || password.trim().length < 8) {
       setError((prev) => {
         return {
           ...prev,
@@ -55,12 +70,50 @@ const Form = () => {
       });
     }
   };
-  const handleLogin = () => {
+
+  useEffect(() => {
+    if (useFinger) {
+      setNumber(loginDetails.number);
+    }
+  }, []);
+  const handleLogin = async () => {
     validatesInput();
 
-    if (number.trim() === '' || password.trim() === '') {
+    if (
+      number?.trim() === '' ||
+      password.trim().length < 8 ||
+      number?.trim().length !== 11
+    ) {
       return;
     }
+
+    try {
+      setLoading(true);
+      const response: responseProp = await sendPostRequest(number, password);
+      setLoading(false);
+      if (response?.status !== 'success') {
+        toast.show({
+          placement: 'top',
+          render: ({ id }) => {
+            const toastId = 'toast-' + id;
+            return (
+              <Toast
+                nativeID={toastId}
+                width={WindowConstant.width - 20}
+                mt={40}
+                action="error"
+                variant="accent"
+              >
+                <VStack space="xs">
+                  <ToastTitle>Login Fail</ToastTitle>
+                  <ToastDescription>{response?.msg}</ToastDescription>
+                </VStack>
+              </Toast>
+            );
+          },
+        });
+      }
+    } catch (error) {}
   };
 
   return (
@@ -70,19 +123,21 @@ const Form = () => {
         paddingVertical: WindowConstant.width * 0.05,
       }}
     >
-      <Heading>Welcome back,</Heading>
-      <Heading mb="$3">Umar Musa</Heading>
-      <MyInput
-        text="Phone Number"
-        type="phone-pad"
-        icon="call"
-        value={number}
-        isInvalid={error.num}
-        onChange={(e) => {
-          resetInput('num');
-          setNumber(e.nativeEvent.text);
-        }}
-      />
+      <Heading mb={!useFinger ? '$5' : 0}>Welcome back!</Heading>
+      {useFinger && <Heading mb="$3">{loginDetails.name}</Heading>}
+      {!useFinger && (
+        <MyInput
+          text="Phone Number"
+          type="phone-pad"
+          icon="call"
+          value={number}
+          isInvalid={error.num}
+          onChange={(e) => {
+            resetInput('num');
+            setNumber(e.nativeEvent.text);
+          }}
+        />
+      )}
       <MyInput
         text="Password"
         password
@@ -104,8 +159,9 @@ const Form = () => {
           flex={1}
           bgColor={ColorConstant.primary}
           onPress={handleLogin}
+          isDisabled={isLoading}
         >
-          <ButtonText>Login</ButtonText>
+          <ButtonText>{isLoading ? 'Loading...' : 'Login'}</ButtonText>
         </Button>
 
         {useFinger && (
