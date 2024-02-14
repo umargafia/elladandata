@@ -1,4 +1,4 @@
-import { KeyboardType, StyleSheet, Text, View } from 'react-native';
+import { NativeSyntheticEvent, TextInputChangeEventData } from 'react-native';
 import { KeyboardTypeOptions } from 'react-native';
 import React from 'react';
 import {
@@ -19,6 +19,10 @@ type props = {
   helperText?: string;
   type?: KeyboardTypeOptions;
   icon?: string;
+  onChange?:
+    | ((e: NativeSyntheticEvent<TextInputChangeEventData>) => void)
+    | undefined;
+  isInvalid?: boolean;
 };
 const MyInput: React.FC<props> = ({
   text,
@@ -27,13 +31,15 @@ const MyInput: React.FC<props> = ({
   helperText,
   type,
   icon,
+  onChange,
+  isInvalid,
 }) => {
   return (
     <FormControl
       isDisabled={false}
-      isInvalid={false}
+      isInvalid={isInvalid}
       isReadOnly={false}
-      isRequired={false}
+      isRequired={true}
       alignSelf="stretch"
       mt={-15}
     >
@@ -48,6 +54,7 @@ const MyInput: React.FC<props> = ({
           type={password ? 'password' : 'text'}
           value={value}
           keyboardType={type}
+          onChange={onChange}
           placeholder={text}
         />
       </Input>

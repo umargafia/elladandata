@@ -1,5 +1,5 @@
 import { StyleSheet, TouchableOpacity } from 'react-native';
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Button,
   ButtonText,
@@ -21,6 +21,47 @@ type navProps = NativeStackNavigationProp<RootStackParamList, 'login'>;
 const Form = () => {
   const navigation = useNavigation<navProps>();
   const { loginDetails, useFinger } = useCheckFingerPrint();
+  const [number, setNumber] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<{ num: boolean; pass: boolean }>({
+    num: false,
+    pass: false,
+  });
+
+  const resetInput = (value: string) => {
+    setError((prev) => {
+      return {
+        ...prev,
+        [value]: false,
+      };
+    });
+  };
+
+  const validatesInput = () => {
+    if (number.trim() === '') {
+      setError((prev) => {
+        return {
+          ...prev,
+          num: true,
+        };
+      });
+    }
+    if (password.trim() === '') {
+      setError((prev) => {
+        return {
+          ...prev,
+          pass: true,
+        };
+      });
+    }
+  };
+  const handleLogin = () => {
+    validatesInput();
+
+    if (number.trim() === '' || password.trim() === '') {
+      return;
+    }
+  };
 
   return (
     <MyContainer
@@ -31,12 +72,28 @@ const Form = () => {
     >
       <Heading>Welcome back,</Heading>
       <Heading mb="$3">Umar Musa</Heading>
-      <MyInput text="Phone Number" type="phone-pad" icon="call" />
+      <MyInput
+        text="Phone Number"
+        type="phone-pad"
+        icon="call"
+        value={number}
+        isInvalid={error.num}
+        onChange={(e) => {
+          resetInput('num');
+          setNumber(e.nativeEvent.text);
+        }}
+      />
       <MyInput
         text="Password"
         password
+        value={password}
         icon="lock-closed"
+        isInvalid={error.pass}
         helperText="Password should be at least 8 characters"
+        onChange={(e) => {
+          resetInput('pass');
+          setPassword(e.nativeEvent.text);
+        }}
       />
       <HStack alignSelf="stretch" mt={'$4'}>
         <Button
@@ -46,6 +103,7 @@ const Form = () => {
           mb="$2"
           flex={1}
           bgColor={ColorConstant.primary}
+          onPress={handleLogin}
         >
           <ButtonText>Login</ButtonText>
         </Button>
