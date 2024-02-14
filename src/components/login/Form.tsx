@@ -37,9 +37,10 @@ type responseProp = {
 };
 const Form = () => {
   const navigation = useNavigation<navProps>();
-  const { loginDetails, useFinger, setFinger } = useCheckFingerPrint();
   const [number, setNumber] = useState<string | undefined>('');
   const [password, setPassword] = useState<string>('');
+  const { loginDetails, useFinger, usePassword, setFinger, setUsePassword } =
+    useCheckFingerPrint();
   const [error, setError] = useState<{ num: boolean; pass: boolean }>({
     num: false,
     pass: false,
@@ -99,10 +100,10 @@ const Form = () => {
   };
 
   useEffect(() => {
-    if (useFinger) {
+    if (usePassword) {
       setNumber(loginDetails.number);
     }
-  }, [useFinger, loginDetails]);
+  }, [useFinger, loginDetails, usePassword]);
   const handleLogin = async () => {
     validatesInput();
 
@@ -143,12 +144,16 @@ const Form = () => {
           password: loginDetails?.password,
         });
       }
-    } catch (error) {}
+    } catch (error) {
+      showError({ msg: 'something went wrong' });
+      setFinger(false);
+    }
   };
 
   const handleChangeNumber = () => {
     setNumber('');
     setFinger(false);
+    setUsePassword(false);
   };
 
   return (
@@ -158,8 +163,8 @@ const Form = () => {
         paddingVertical: WindowConstant.width * 0.05,
       }}
     >
-      <Heading mb={!useFinger ? '$5' : 0}>Welcome Back!</Heading>
-      {useFinger && (
+      <Heading mb={!usePassword ? '$5' : 0}>Welcome Back!</Heading>
+      {usePassword && (
         <>
           <Heading mb="$2" textTransform="capitalize">
             {loginDetails.name}
@@ -169,7 +174,7 @@ const Form = () => {
           </Link>
         </>
       )}
-      {!useFinger && (
+      {!usePassword && (
         <MyInput
           text="Phone Number"
           type="phone-pad"

@@ -8,6 +8,7 @@ import ErrorPage from '../screens/ErrorPage';
 import ForgetPassword from '../screens/ForgetPassword';
 import Home from '../screens/Home';
 import Signup from '../screens/Signup';
+import useCheckFingerPrint from '../hooks/CheckFingerPrint';
 
 export type RootStackParamList = {
   welcome: undefined;
@@ -22,13 +23,14 @@ export type RootStackParamList = {
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 const NativeStack = () => {
+  const { usePassword } = useCheckFingerPrint();
   return (
     <Stack.Navigator
       screenOptions={{
         headerShown: false,
         animation: 'slide_from_right',
       }}
-      initialRouteName="welcome"
+      initialRouteName={!usePassword ? 'welcome' : 'slider'}
     >
       <Stack.Screen name="slider" component={MySlider} />
       <Stack.Screen name="welcome" component={WelcomeScreen} />

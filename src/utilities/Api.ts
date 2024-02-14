@@ -25,7 +25,7 @@ export async function sendPostRequest(
 
     return response.data;
   } catch (error) {
-    Alert.alert('Error', `Error Login\n${error}`);
+    Alert.alert('Error Login', `${error}`);
     return null;
   }
 }
